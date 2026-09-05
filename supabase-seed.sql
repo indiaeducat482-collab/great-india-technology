@@ -1,3 +1,0 @@
--- Compatibility file.
--- The complete schema + seed data is in supabase-fixed.sql.
--- Run supabase-fixed.sql once instead of this older seed file.
