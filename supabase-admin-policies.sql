@@ -1,0 +1,3 @@
+-- Compatibility file.
+-- The complete RLS + Storage setup is in supabase-fixed.sql.
+-- Run supabase-fixed.sql once instead of this older policy file.
