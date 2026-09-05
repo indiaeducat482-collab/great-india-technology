@@ -1,9 +1,0 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Dashboard</title>
-<style>body{font-family:system-ui,Arial;margin:0;background:#f6f7fb;color:#17203a}.top{background:#111936;color:#fff;padding:20px 5%;display:flex;justify-content:space-between;align-items:center}.wrap{max-width:1100px;margin:35px auto;padding:0 20px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:22px}.card h2{margin-top:0}button{border:0;border-radius:10px;padding:11px 16px;background:#4f46e5;color:#fff;font-weight:700;cursor:pointer}.logout{background:#fff;color:#111936}@media(max-width:700px){.cards{grid-template-columns:1fr}}</style></head><body>
-<div class="top"><b>Great India Technology — Admin</b><button class="logout" onclick="sessionStorage.clear();location.href='admin.html'">Logout</button></div>
-<div class="wrap"><h1>Admin Dashboard</h1><p>Manage your website content and publish new services/apps.</p><div class="cards">
-<div class="card"><h2>➕ Add Service</h2><p>Prepare a new service card for the company website.</p><button onclick="alert('Connect this button to Supabase/database to publish services.')">Add Service</button></div>
-<div class="card"><h2>📱 Add App</h2><p>Add app name, logo, description and public app link.</p><button onclick="alert('Connect this button to Supabase/database to publish apps.')">Add App</button></div>
-<div class="card"><h2>⚙️ Settings</h2><p>For production, connect secure authentication and database storage.</p><button onclick="alert('Production setup: Supabase Auth + Database + Storage.')">Settings</button></div>
-</div><p style="margin-top:30px"><a href="index.html">← View Website</a></p></div>
-<script>if(sessionStorage.getItem('git_admin')!=='1')location.href='admin.html';</script></body></html>
