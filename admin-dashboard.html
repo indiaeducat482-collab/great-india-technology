@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard | Great India Technology</title>
+<style>
+*{box-sizing:border-box}body{font-family:system-ui,Arial;margin:0;background:#f6f7fb;color:#17203a}
+.top{background:#111936;color:#fff;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.wrap{max-width:1100px;margin:30px auto;padding:0 20px}.panel{background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:24px;margin-bottom:22px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.field{margin-bottom:15px}.field label{display:block;font-weight:700;margin-bottom:7px}
+input,textarea{width:100%;padding:12px;border:1px solid #d8dce7;border-radius:10px;font:inherit}textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:10px;padding:11px 16px;background:#4f46e5;color:#fff;font-weight:750;cursor:pointer}.danger{background:#b42318}.secondary{background:#eef2ff;color:#3730a3}
+.preview{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.member{border:1px solid #e5e7eb;border-radius:14px;padding:15px}.member img{width:70px;height:70px;border-radius:50%;object-fit:cover}.member h3{margin:8px 0 2px}.muted{color:#667085;font-size:14px}
+.logout{background:#fff;color:#111936}@media(max-width:750px){.grid,.preview{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+</style></head><body>
+<div class="top"><b>Great India Technology — Admin Panel</b><button class="logout" onclick="sessionStorage.clear();location.href='admin.html'">Logout</button></div>
+<div class="wrap">
+<h1>Admin Dashboard</h1>
+<p class="muted">Manage Team members. The same structure can later be connected to Supabase so updates become permanent on the live domain.</p>
+
+
+<div class="panel"><h2>📱 Add Any App / Project</h2>
+<p class="muted">Admin can add any app by entering its name, description, public link and logo.</p>
+<div class="grid">
+<div>
+<div class="field"><label>App Name</label><input id="appName" placeholder="e.g. School Management App"></div>
+<div class="field"><label>Description</label><textarea id="appBio" placeholder="Short description"></textarea></div>
+<div class="field"><label>App / Website Link</label><input id="appUrl" type="url" placeholder="https://..."></div>
+<div class="field"><label>App Logo</label><input id="appPhoto" type="file" accept="image/*"></div>
+<button onclick="addApp()">➕ Add App</button>
+</div>
+<div><h3>Logo Preview</h3><img id="appPreview" src="assets/logo.jpg" style="width:120px;height:120px;border-radius:20px;object-fit:cover">
+<p class="muted">The app appears immediately in the Apps & Projects section on this browser.</p></div>
+</div></div>
+<div class="panel"><h2>Current Added Apps</h2><div id="apps" class="preview"></div></div>
+
+<div class="panel"><h2>👥 Add / Update Team Member</h2>
+<div class="grid">
+<div>
+<div class="field"><label>Team Member Name</label><input id="name" placeholder="e.g. Lavkush Kumar"></div>
+<div class="field"><label>Designation / Role</label><input id="role" placeholder="e.g. Founder & CEO"></div>
+<div class="field"><label>Information</label><textarea id="bio" placeholder="Short introduction about this team member"></textarea></div>
+<div class="field"><label>Photo</label><input id="photo" type="file" accept="image/*"></div>
+<button onclick="addMember()">Add Team Member</button>
+</div>
+<div><h3>Photo Preview</h3><img id="preview" src="assets/logo.jpg" style="width:150px;height:150px;border-radius:20px;object-fit:cover"><p class="muted">Upload JPG/PNG/WebP. The demo stores it in this browser. For the live production version, connect Supabase Storage.</p></div>
+</div></div>
+
+<div class="panel"><h2>Current Team</h2><div id="members" class="preview"></div></div>
+<div class="panel"><h2>🚀 Next production upgrade</h2><p class="muted">Connect Supabase Auth + Database + Storage to make Team, Services and Apps editable from any device and permanently visible on the domain.</p>
+<button class="secondary" onclick="location.href='index.html'">View Website</button></div>
+</div>
+<script>
+if(sessionStorage.getItem('git_admin')!=='1')location.href='admin.html';
+const key='git_team';
+let team=JSON.parse(localStorage.getItem(key)||'null')||[
+{name:'Great India Technology Team',role:'Software & Digital Solutions',bio:'Building websites, apps and business software for growing organizations.',photo:'assets/logo.jpg'}
+];
+function save(){localStorage.setItem(key,JSON.stringify(team));render();
+
+const appKey='git_apps';
+let apps=JSON.parse(localStorage.getItem(appKey)||'[]');
+document.getElementById('appPhoto').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>document.getElementById('appPreview').src=r.result;r.readAsDataURL(f)}
+function saveApps(){localStorage.setItem(appKey,JSON.stringify(apps));renderApps();}
+function renderApps(){document.getElementById('apps').innerHTML=apps.length?apps.map((a,i)=>`<div class="member"><img src="${a.logo||'assets/logo.jpg'}"><h3>${esc(a.name)}</h3><p class="muted">${esc(a.description)}</p><a href="${esc(a.url)}" target="_blank">Open App →</a><br><button class="danger" style="margin-top:10px" onclick="removeApp(${i})">Delete</button></div>`).join(''):'<p class="muted">No new apps added yet.</p>'}
+function addApp(){
+ const name=document.getElementById('appName').value.trim(), description=document.getElementById('appBio').value.trim(), url=document.getElementById('appUrl').value.trim();
+ if(!name||!url){alert('App Name and App / Website Link are required');return}
+ const file=document.getElementById('appPhoto').files[0];
+ const done=logo=>{apps.push({name,description,url,logo:logo||'assets/logo.jpg'});saveApps();document.getElementById('appName').value='';document.getElementById('appBio').value='';document.getElementById('appUrl').value='';document.getElementById('appPhoto').value='';document.getElementById('appPreview').src='assets/logo.jpg';alert('App added successfully');}
+ if(file){const r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(file)}else done();
+}
+function removeApp(i){if(confirm('Delete this app?')){apps.splice(i,1);saveApps()}}
+renderApps();
+}
+function render(){document.getElementById('members').innerHTML=team.map((m,i)=>`
+<div class="member"><img src="${m.photo||'assets/logo.jpg'}"><h3>${esc(m.name)}</h3><b>${esc(m.role)}</b><p class="muted">${esc(m.bio)}</p>
+<button class="danger" onclick="removeMember(${i})">Delete</button></div>`).join('')}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+document.getElementById('photo').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>document.getElementById('preview').src=r.result;r.readAsDataURL(f)}
+function addMember(){
+ const name=document.getElementById('name').value.trim(),role=document.getElementById('role').value.trim(),bio=document.getElementById('bio').value.trim();
+ if(!name||!role){alert('Name and role are required');return}
+ const file=document.getElementById('photo').files[0];
+ const done=photo=>{team.push({name,role,bio,photo:photo||'assets/logo.jpg'});save();document.getElementById('name').value='';document.getElementById('role').value='';document.getElementById('bio').value='';document.getElementById('photo').value='';document.getElementById('preview').src='assets/logo.jpg';alert('Team member added');}
+ if(file){const r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(file)}else done();
+}
+function removeMember(i){if(confirm('Delete this team member?')){team.splice(i,1);save()}}
+render();
+</script></body></html>
